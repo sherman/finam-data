@@ -15,9 +15,9 @@ import java.io.File;
  */
 public class Application {
     public static void main(String[] args) {
-        Preconditions.checkArgument(args.length == 1, "Path to a date file is required");
+        Preconditions.checkArgument(args.length > 1, "Path to a date file is required");
 
-        File dataFile = new File(args[0]);
+        File dataFile = new File(args[1]);
 
         Injector injector = Guice.createInjector();
 
