@@ -6,6 +6,7 @@ import org.asynchttpclient.AsyncHttpClient;
 import org.asynchttpclient.DefaultAsyncHttpClient;
 import org.asynchttpclient.DefaultAsyncHttpClientConfig;
 import org.jetbrains.annotations.NotNull;
+import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
@@ -36,7 +37,7 @@ import static com.google.common.io.Files.newReader;
 public class DataServiceImpl extends AbstractService implements DataService {
     private static final Logger log = LoggerFactory.getLogger(DataServiceImpl.class);
 
-    private static final String FINAM_URL = "http://export.finam.ru/%symbol%.txt?market=%market%&em=%em%&code=%symbol%&apply=0&df=1&mf=0&yf=%year_from%&from=%from%&dt=11&mt=5&yt=%year_to%&to=%to%&p=%period%&f=%symbol%&e=.txt&cn=%symbol%&dtf=1&tmf=1&MSOR=1&mstime=on&mstimever=1&sep=1&sep2=1&datf=5";
+    private static final String FINAM_URL = "http://export.finam.ru/%symbol%.txt?market=%market%&em=%em%&code=%symbol%&apply=0&df=%day_from%&mf=%month_from%&yf=%year_from%&from=%from%&dt=%day_to%&mt=%month_to%&yt=%year_to%&to=%to%&p=%period%&f=%symbol%&e=.txt&cn=%symbol%&dtf=1&tmf=1&MSOR=1&mstime=on&mstimever=1&sep=1&sep2=1&datf=5";
     private static final LocalDate startDate = new LocalDate("2008-01-01");
     private static final int MAX_YEARS = 2;
 
@@ -59,13 +60,22 @@ public class DataServiceImpl extends AbstractService implements DataService {
 
         LocalDate finish = start.plusDays(symbolSpec.getDays());
 
+        // can't pass next year :-/
+        if (finish.getYear() == LocalDate.now(DateTimeZone.UTC).getYear() + 1) {
+            finish = new LocalDate(LocalDate.now(DateTimeZone.UTC).getYear() + "-12-31");
+        }
+
         String dataUrl = FINAM_URL
                 .replace("%symbol%", symbolSpec.getName())
                 .replace("%market%", String.valueOf(symbolSpec.getMarketId()))
                 .replace("%em%", String.valueOf(symbolSpec.getEm()))
                 .replace("%symbol%", symbolSpec.getName())
-                .replace("%year_from%", String.valueOf(start))
-                .replace("%year_to%", String.valueOf(finish))
+                .replace("%year_from%", String.valueOf(start.getYear()))
+                .replace("%month_from%", String.valueOf(start.getMonthOfYear() - 1))
+                .replace("%day_from%", String.valueOf(start.getDayOfMonth()))
+                .replace("%year_to%", String.valueOf(finish.getYear()))
+                .replace("%month_to%", String.valueOf(finish.getMonthOfYear() - 1))
+                .replace("%day_to%", String.valueOf(finish.getDayOfMonth()))
                 .replace("%from%", start.toString("dd.MM.yyyy"))
                 .replace("%to%", finish.toString("dd.MM.yyyy"))
                 .replace("%period%", String.valueOf(symbolSpec.getPeriod().getId()));

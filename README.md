@@ -16,6 +16,6 @@ mvn clean package
 
 ## Running
 ```bash
-java -jar target/finam-data-0.0.1-SNAPSHOT-jar-with-dependencies.jar org.ontslab.data.finam.app.Application /home/sherman/si-5
+java -jar target/finam-data-0.0.2-SNAPSHOT-jar-with-dependencies.jar org.ontslab.data.finam.app.Application /home/sherman/si-5
 ```
 
