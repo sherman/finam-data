@@ -6,7 +6,6 @@ import org.asynchttpclient.AsyncHttpClient;
 import org.asynchttpclient.DefaultAsyncHttpClient;
 import org.asynchttpclient.DefaultAsyncHttpClientConfig;
 import org.jetbrains.annotations.NotNull;
-import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
@@ -59,11 +58,6 @@ public class DataServiceImpl extends AbstractService implements DataService {
         )).orElse(start.minusYears(10).toLocalDateTime(new LocalTime("00:00:00")));
 
         LocalDate finish = start.plusDays(symbolSpec.getDays());
-
-        // can't pass next year :-/
-        if (finish.getYear() == LocalDate.now(DateTimeZone.UTC).getYear() + 1) {
-            finish = new LocalDate(LocalDate.now(DateTimeZone.UTC).getYear() + "-12-31");
-        }
 
         String dataUrl = FINAM_URL
                 .replace("%symbol%", symbolSpec.getName())
