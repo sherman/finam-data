@@ -18,6 +18,7 @@ public class Application {
         Preconditions.checkArgument(args.length > 1, "Path to a date file is required");
 
         File dataFile = new File(args[1]);
+        int elts = Integer.parseInt(args[2]);
 
         Injector injector = Guice.createInjector();
 
@@ -27,7 +28,7 @@ public class Application {
         symbolSpec.setPeriod(Period.FIVE_MINUTES);
         symbolSpec.setEm(19899);
         symbolSpec.setMarketId(14);
-        symbolSpec.setDays(365);
+        symbolSpec.setDays(elts);
 
         DataService dataService = injector.getInstance(DataService.class);
 
