@@ -116,7 +116,7 @@ public class DataServiceImpl extends AbstractService implements DataService {
                     });
         } catch (FileNotFoundException e) {
             log.error("Can't read file {}", file, e);
-            return Optional.<T>empty();
+            return Optional.empty();
         }
     }
 
