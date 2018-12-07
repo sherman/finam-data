@@ -59,6 +59,11 @@ public class DataServiceImpl extends AbstractService implements DataService {
 
         LocalDate finish = start.plusDays(symbolSpec.getDays());
 
+        // restriction of Finam data feed
+        if (finish.getYear() != start.getYear()) {
+            finish = LocalDate.parse(String.format("%d-12-31", start.getYear()));
+        }
+
         String dataUrl = FINAM_URL
                 .replace("%symbol%", symbolSpec.getName())
                 .replace("%market%", String.valueOf(symbolSpec.getMarketId()))
